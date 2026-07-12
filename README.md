@@ -62,12 +62,7 @@ Result shown to user
 
 ---
 
-## 📸 Screenshots
 
-### Home Page
-![Emotion Detection App](https://invigorating-blessing-production-97ab.up.railway.app/)
-
----
 
 ## 🏃 Run Locally
 
