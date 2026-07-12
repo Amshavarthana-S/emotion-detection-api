@@ -9,7 +9,7 @@ function App() {
   const [error, setError] = useState('');
 
   const detectEmotion = async () => {
-    console.log("Detect Emotion button clicked or Enter pressed!");
+    console.log("VERSION 2 - Detect Emotion clicked!");
     if (!text.trim()) {
       setError('Please enter some text');
       return;
