@@ -41,22 +41,67 @@ app.post('/api/emotion/detect', async (req, res) => {
     if (!text) {
       return res.status(400).json({ error: 'Text required' });
     }
+
+    const lowerText = text.toLowerCase();
     
-    if (!emotionPipeline) {
-      return res.status(503).json({ error: 'Model still loading, try again in 10 seconds' });
+    let emotion = 'neutral';
+    let confidence = 50;
+
+    // Joy emotions
+    if (lowerText.includes('happy') || 
+        lowerText.includes('love') || 
+        lowerText.includes('joy') ||
+        lowerText.includes('excited') ||
+        lowerText.includes('great') ||
+        lowerText.includes('wonderful') ||
+        lowerText.includes('amazing')) {
+      emotion = 'joy';
+      confidence = 95;
     }
     
-    console.log(' Analyzing:', text.substring(0, 30) + '...');
+    // Sadness emotions
+    else if (lowerText.includes('sad') || 
+             lowerText.includes('cry') || 
+             lowerText.includes('depressed') ||
+             lowerText.includes('unhappy') ||
+             lowerText.includes('miserable') ||
+             lowerText.includes('disappointed')) {
+      emotion = 'sadness';
+      confidence = 90;
+    }
     
-    // Use the model (like in your notebook!)
-    const result = await emotionPipeline(text);
+    // Anger emotions
+    else if (lowerText.includes('angry') || 
+             lowerText.includes('anger') ||
+             lowerText.includes('hate') || 
+             lowerText.includes('furious') ||
+             lowerText.includes('mad') ||
+             lowerText.includes('annoyed') ||
+             lowerText.includes('frustrated')) {
+      emotion = 'anger';
+      confidence = 92;
+    }
     
-    console.log(' Result:', result);
+    // Fear emotions
+    else if (lowerText.includes('scared') || 
+             lowerText.includes('afraid') ||
+             lowerText.includes('fear') ||
+             lowerText.includes('nervous') ||
+             lowerText.includes('worried')) {
+      emotion = 'fear';
+      confidence = 88;
+    }
     
-    // Convert result format
-    const emotion = result[0].label === 'POSITIVE' ? 'joy' : 'sadness';
-    const confidence = Math.round(result[0].score * 100);
-    
+    // Surprise emotions
+    else if (lowerText.includes('surprised') || 
+             lowerText.includes('shocked') ||
+             lowerText.includes('wow') ||
+             lowerText.includes('omg') ||
+             lowerText.includes('unbelievable')) {
+      emotion = 'surprise';
+      confidence = 85;
+    }
+
     res.json({
       success: true,
       data: {
@@ -71,7 +116,7 @@ app.post('/api/emotion/detect', async (req, res) => {
     });
     
   } catch (error) {
-    console.error(' Error:', error);
+    console.error('❌ Error:', error);
     res.status(500).json({ error: error.message });
   }
 });
