@@ -6,26 +6,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Load the emotion detection model (from your notebook!)
-let emotionPipeline = null;
-
-async function loadModel() {
-  try {
-    console.log(' Loading emotion detection model (from notebook approach)...');
-    const { pipeline } = require('@xenova/transformers');
-    
-    emotionPipeline = await pipeline(
-      'text-classification',
-      'Xenova/distilbert-base-uncased-finetuned-sst-2-english'
-    );
-    
-    console.log(' Model loaded successfully!');
-  } catch (error) {
-    console.error(' Error loading model:', error);
-  }
-}
-
-// Simple health check
 app.get('/', (req, res) => {
   res.json({ 
     message: 'Emotion Detection API Running!',
@@ -33,7 +13,6 @@ app.get('/', (req, res) => {
   });
 });
 
-// Emotion detection endpoint
 app.post('/api/emotion/detect', async (req, res) => {
   try {
     const { text } = req.body;
@@ -47,7 +26,7 @@ app.post('/api/emotion/detect', async (req, res) => {
     let emotion = 'neutral';
     let confidence = 50;
 
-    // Joy emotions
+    // Joy
     if (lowerText.includes('happy') || 
         lowerText.includes('love') || 
         lowerText.includes('joy') ||
@@ -59,7 +38,7 @@ app.post('/api/emotion/detect', async (req, res) => {
       confidence = 95;
     }
     
-    // Sadness emotions
+    // Sadness
     else if (lowerText.includes('sad') || 
              lowerText.includes('cry') || 
              lowerText.includes('depressed') ||
@@ -70,7 +49,7 @@ app.post('/api/emotion/detect', async (req, res) => {
       confidence = 90;
     }
     
-    // Anger emotions
+    // Anger
     else if (lowerText.includes('angry') || 
              lowerText.includes('anger') ||
              lowerText.includes('hate') || 
@@ -82,7 +61,7 @@ app.post('/api/emotion/detect', async (req, res) => {
       confidence = 92;
     }
     
-    // Fear emotions
+    // Fear
     else if (lowerText.includes('scared') || 
              lowerText.includes('afraid') ||
              lowerText.includes('fear') ||
@@ -92,7 +71,7 @@ app.post('/api/emotion/detect', async (req, res) => {
       confidence = 88;
     }
     
-    // Surprise emotions
+    // Surprise
     else if (lowerText.includes('surprised') || 
              lowerText.includes('shocked') ||
              lowerText.includes('wow') ||
@@ -116,15 +95,12 @@ app.post('/api/emotion/detect', async (req, res) => {
     });
     
   } catch (error) {
-    console.error('❌ Error:', error);
+    console.error('Error:', error);
     res.status(500).json({ error: error.message });
   }
 });
 
 const PORT = process.env.PORT || 5000;
-
-// Start server and load model
-app.listen(PORT, async () => {
-  console.log(` Server running on http://localhost:${PORT}`);
-  await loadModel();
+app.listen(PORT, () => {
+  console.log(`✅ Server running on http://localhost:${PORT}`);
 });
