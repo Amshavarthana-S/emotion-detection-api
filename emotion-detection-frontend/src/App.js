@@ -19,7 +19,7 @@ function App() {
     setError('');
 
     try {
-      const response = await axios.post('/api/emotion/detect', { text });
+      const response = await axios.post('https://emotion-detection-api-production.up.railway.app/api/emotion/detect', { text });
       if (!response.data || !response.data.success) {
         throw new Error(response.data.error || 'Invalid response from server');
       }
